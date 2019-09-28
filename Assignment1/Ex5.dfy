@@ -28,12 +28,11 @@ predicate EOSorted(a: array<int>)
 requires a !=  null
 reads a
 // if all even + odd pairs are sorted return true post conidtion
-ensures forall i,j :: 0 <= i <= j < a.Length - 2 && j == i+2 && (a[i] < a[j]) 
-==> true ==> exists i,j :: 0 <= i <= j < a.Length - 2 && j == i+2 && (a[i] > a[j]) ==> false;
-// doesn't modify array post condition
+ensures forall i,j :: 0 <= i <= j < a.Length - 2 && j == i+2 && (a[i] < a[j]) ==> true ==> 
+                exists i,j :: 0 <= i <= j < a.Length - 2 && j == i+2 && (a[i] > a[j]) ==> false
 {
-    forall i,j :: 0 <= i <= j < a.Length - 2 && j == i+2 ==> a[i] < a[j] 
-    ==> !exists i,j :: 0 <= i <= j < a.Length - 2 && j == i+2 && (a[i] > a[j])
+    forall i,j :: 0 <= i <= j < a.Length - 2 && j == i+2 ==> a[i] < a[j]  ==> 
+            !exists i,j :: 0 <= i <= j < a.Length - 2 && j == i+2 && (a[i] > a[j])
     
 }
 
@@ -54,19 +53,8 @@ method Test()
     testArray5[0], testArray5[1], testArray5[2],testArray5[3] := 1, 2, 3, 1;
 
     assert EOSorted(testArray1);
-    //assert test1 == false;
-
     assert EOSorted(testArray2);
-    //assert test2 == true;
-
     assert EOSorted(testArray3);
-    //assert test3 == true;
-
     assert EOSorted(testArray4);
-    //assert test4 == true;
-
     assert EOSorted(testArray5);
-    //assert test5 == false;
-
-    //print test1, "--", test2, "--", test3, "--",test4, "--",test5, "--\n";
 }
