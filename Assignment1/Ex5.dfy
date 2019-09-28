@@ -26,21 +26,17 @@
 
 method EOSorted(a: array<int>) returns(IsEoSorted:bool)
 requires a !=  null
-// ensures ___ ==> true
 ensures a.Length >= 0 && a.Length <= 2 ==> true
 // if all even + odd pairs are sorted return true post conidtion 
-ensures forall i,j :: 0 <= i <= j < a.Length - 2 && j == i+2 && (a[i] < a[j]) ==> true 
-// if a pair of even/odd are not sorted, return false post condition
-//ensures exists i,j :: 0 <= i <= j < a.Length - 2 && a.Length > 2  && j == i+2  && (a[i] > a[j]) ==> false;
+ensures if forall i,j :: 0 <= i <= j < a.Length - 2 && j == i+2 && (a[i] < a[j]) then true else false;
 // doesn't modify array post condition
 ensures forall i :: 0 <= i < a.Length ==> a[i] == old(a[i]) 
 {
+    IsEoSorted := true;
     if(a.Length > 2){
         var i := 0;
-        IsEoSorted := false;
         while i < a.Length - 2
         invariant 0 <= i <= a.Length - 2
-        //invariant exists i,j :: 0 <= i <= j < a.Length - 2 && a.Length > 2  && j == i+2  && (a[i] > a[j]) ==> (IsEoSorted == false)
         {
             if(a[i] > a[i+2]){
                 IsEoSorted := false;
@@ -48,16 +44,10 @@ ensures forall i :: 0 <= i < a.Length ==> a[i] == old(a[i])
             }
             i := i + 1;
         }
-        IsEoSorted := true;
     }else{
         IsEoSorted := true;
-    }
-    // if(exists i,j :: 0 <= i <= j < a.Length - 2 && a.Length > 2  && j == i+2  && (a[i] > a[j])){
-    //     IsEoSorted := false;
-    // }else{
-    //     IsEoSorted := true;
-    // }
-    
+    } 
+    //assert forall i,j :: 0 <= i <= j < a.Length - 2 && j == i+2 && (a[i] < a[j]) ==> (IsEoSorted == true);
 }
 
 method Main()
@@ -77,7 +67,7 @@ method Main()
     testArray5[0], testArray5[1], testArray5[2],testArray5[3] := 1, 2, 3, 1;
 
     var test1 := EOSorted(testArray1);
-    assert test1 == true;
+    //assert test1 == true;
 
     var test2 := EOSorted(testArray2);
     //assert test2 == true;
@@ -91,6 +81,5 @@ method Main()
     var test5 := EOSorted(testArray5);
     //assert test5 == false;
 
-    print "hellooo\n";
     print test1, "--", test2, "--", test3, "--",test4, "--",test5, "--\n";
 }
