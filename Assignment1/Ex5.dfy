@@ -27,12 +27,9 @@
 predicate EOSorted(a: array<int>)
 requires a !=  null
 reads a
-// if all even + odd pairs are sorted return true post conidtion
-ensures forall i,j :: 0 <= i <= j < a.Length - 2 && j == i+2 && (a[i] < a[j]) ==> true ==> 
-                exists i,j :: 0 <= i <= j < a.Length - 2 && j == i+2 && (a[i] > a[j]) ==> false
 {
-    forall i,j :: 0 <= i <= j < a.Length - 2 && j == i+2 ==> a[i] < a[j]  ==> 
-            !exists i,j :: 0 <= i <= j < a.Length - 2 && j == i+2 && (a[i] > a[j])
+    (forall i,j :: 0 <= i < a.Length - 2 && j == i+2 ==> a[i] < a[j]) &&
+            (!exists i,j :: 0 <= i < a.Length - 2 && j == i+2 && (a[i] > a[j]))
     
 }
 
@@ -52,9 +49,29 @@ method Test()
     var testArray5: array<int> := new int[4];
     testArray5[0], testArray5[1], testArray5[2],testArray5[3] := 1, 2, 3, 1;
 
+    assert testArray1.Length == 6;
+    assert testArray1[0] == 2;
+    assert testArray1[1] == 1;
+    assert testArray1[2] == 4;
+    assert testArray1[3] == 2;
+    assert testArray1[4] == 6;
+    assert testArray1[5] == 3;
+    assert testArray2.Length == 2;
+    assert testArray2[0] == 1;
+    assert testArray2[1] == 2;
+    assert testArray3.Length == 2;
+    assert testArray3[0] == 2;
+    assert testArray3[1] == 1;
+    assert testArray4.Length == 0;
+    assert testArray5.Length == 4;
+    assert testArray5[0]  == 1;
+    assert testArray5[1] == 2;
+    assert testArray5[2] == 3;
+    assert testArray5[3] == 1;
+
     assert EOSorted(testArray1);
     assert EOSorted(testArray2);
     assert EOSorted(testArray3);
     assert EOSorted(testArray4);
-    assert EOSorted(testArray5);
+    assert !EOSorted(testArray5);
 }
