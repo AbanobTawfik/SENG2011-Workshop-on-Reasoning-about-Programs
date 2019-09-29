@@ -100,55 +100,42 @@ method Main()
     assert testArray1[2] == 2;
     assert testArray1[3] == 1;
     var test1 := Just1(testArray1, 1);
-    assert CountOccurencesFromZeroToIndex(testArray1, 1, testArray1.Length - 1) == 3;
     assert !VerifyJustOne(testArray1, 1);
-    assert !test1;
-    assert !VerifyJustOne(testArray1, 1) && !test1;
+    assert test1 <==> (CountOccurencesFromZeroToIndex(testArray1, 1, testArray1.Length - 1) == 1);
 
     assert testArray1.Length == 4;
     assert testArray1[0] == 1;
     assert testArray1[1] == 1;
     assert testArray1[2] == 2;
     assert testArray1[3] == 1;
-     var test2 := Just1(testArray1, 2);
-    assert CountOccurencesFromZeroToIndex(testArray1, 2, testArray1.Length - 1) == 1;
+    var test2 := Just1(testArray1, 2);
     assert VerifyJustOne(testArray1, 2);
-    assert test2;
-    assert VerifyJustOne(testArray1, 2) && test2;
+    assert test2 <==> (CountOccurencesFromZeroToIndex(testArray1, 2, testArray1.Length - 1) == 1);
     
     assert testArray1.Length == 4;
     assert testArray1[0] == 1;
     assert testArray1[1] == 1;
     assert testArray1[2] == 2;
     assert testArray1[3] == 1;
-     var test3 := Just1(testArray1, 3);
-    assert CountOccurencesFromZeroToIndex(testArray1, 3, testArray1.Length - 1) == 0;
+    var test3 := Just1(testArray1, 3);
     assert !VerifyJustOne(testArray1, 3);
-    assert !test3;
-    assert !VerifyJustOne(testArray1, 3) && test3;
+    assert test3 <==> (CountOccurencesFromZeroToIndex(testArray1, 3, testArray1.Length - 1) == 1);
 
     assert testArray2.Length == 1;
     assert testArray2[0] == 1;
-     var test4 := Just1(testArray2, 1);
-    assert CountOccurencesFromZeroToIndex(testArray2, 1, testArray2.Length - 1) == 1;
+    var test4 := Just1(testArray2, 1);
     assert VerifyJustOne(testArray2, 1);
-    assert test4;
-    assert VerifyJustOne(testArray2, 1) && test4;
+    assert test4 <==> (CountOccurencesFromZeroToIndex(testArray2, 1, testArray2.Length - 1) == 1);
 
     assert testArray2.Length == 1;
     assert testArray2[0] == 1;
-     var test5 := Just1(testArray2, 2);
-    assert CountOccurencesFromZeroToIndex(testArray2, 2, testArray2.Length - 1) == 0;
+    var test5 := Just1(testArray2, 2);
     assert !VerifyJustOne(testArray2, 2);
-    assert !test5;
-    assert !VerifyJustOne(testArray2, 2) && !test5;
+    assert test5 <==> (CountOccurencesFromZeroToIndex(testArray2, 2, testArray2.Length - 1) == 1);
 
     assert testArray3.Length == 0;
-     var test6 := Just1(testArray3, 1);
-    assert CountOccurencesFromZeroToIndex(testArray3, 1, testArray1.Length) == 0;
+    var test6 := Just1(testArray3, 1);
     assert !VerifyJustOne(testArray3, 1);
-    assert !test6;
-    assert !VerifyJustOne(testArray3, 1) && !test6;
 
     print test1, "\n", test2, "\n", test3, "\n", test4, "\n", test5, "\n", test6, "\n";
 }
