@@ -56,22 +56,25 @@ method Test()
     assert testArray1[3] == 2;
     assert testArray1[4] == 6;
     assert testArray1[5] == 3;
+    assert EOSorted(testArray1);
+
     assert testArray2.Length == 2;
     assert testArray2[0] == 1;
     assert testArray2[1] == 2;
+    assert EOSorted(testArray2);
+
     assert testArray3.Length == 2;
     assert testArray3[0] == 2;
     assert testArray3[1] == 1;
+    assert EOSorted(testArray3);
+
     assert testArray4.Length == 0;
+    assert EOSorted(testArray4);
+
     assert testArray5.Length == 4;
     assert testArray5[0]  == 1;
     assert testArray5[1] == 2;
     assert testArray5[2] == 3;
     assert testArray5[3] == 1;
-
-    assert EOSorted(testArray1);
-    assert EOSorted(testArray2);
-    assert EOSorted(testArray3);
-    assert EOSorted(testArray4);
     assert !EOSorted(testArray5);
 }

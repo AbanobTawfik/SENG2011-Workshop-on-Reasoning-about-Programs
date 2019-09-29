@@ -75,41 +75,57 @@ method Main()
     assert testArray1[1] == 2;
     assert testArray1[2] == 2;
     assert testArray1[3] == 2;
-    assert testArray1[4] == 3;
-    assert testArray2.Length == 1;
-    assert testArray2[0] == 1;
-    assert testArray3.Length == 0;
-    
+    assert testArray1[4] == 3;    
     var test1 := IsClean(testArray1, 1);
     assert !VerifyCleanArray(testArray1, 1);
     assert !test1;
     assert !VerifyCleanArray(testArray1, 1) && !test1;
-    
+
+    assert testArray1.Length == 5;
+    assert testArray1[0] == 1;
+    assert testArray1[1] == 2;
+    assert testArray1[2] == 2;
+    assert testArray1[3] == 2;
+    assert testArray1[4] == 3;
     var test2 := IsClean(testArray1, 2);
     assert !VerifyCleanArray(testArray1, 2);
     assert !test2;
     assert !VerifyCleanArray(testArray1, 2) && !test2;
 
+    assert testArray1.Length == 5;
+    assert testArray1[0] == 1;
+    assert testArray1[1] == 2;
+    assert testArray1[2] == 2;
+    assert testArray1[3] == 2;
+    assert testArray1[4] == 3;
     var test3 := IsClean(testArray1, 3);
     assert !VerifyCleanArray(testArray1, 3);
     assert !test3;
     assert !VerifyCleanArray(testArray1, 3) && !test3;
 
+    assert testArray1.Length == 5;
+    assert testArray1[0] == 1;
+    assert testArray1[1] == 2;
+    assert testArray1[2] == 2;
+    assert testArray1[3] == 2;
+    assert testArray1[4] == 3;
     var test4 := IsClean(testArray1, 4);
     assert VerifyCleanArray(testArray1, 4);
     assert test4;
     assert VerifyCleanArray(testArray1, 4) && test4;
 
+    assert testArray2.Length == 1;
+    assert testArray2[0] == 1;
     var test5 := IsClean(testArray2, 1);
     assert !VerifyCleanArray(testArray2, 1);
     assert !test5;
     assert !VerifyCleanArray(testArray2, 1) && !test5;
-
     var test6 := IsClean(testArray2, 2);
     assert VerifyCleanArray(testArray2, 2);
     assert test6;
     assert VerifyCleanArray(testArray2, 2) && test6;
 
+    assert testArray3.Length == 0;
     var test7 := IsClean(testArray3, 1);
     assert VerifyCleanArray(testArray3, 1);
     assert test7;
