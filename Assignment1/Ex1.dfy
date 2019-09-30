@@ -1,8 +1,8 @@
 /////////////////////////////////////////////////////////////
 //          ALL CODE IN HERE IS WRITTEN BY                 //
-//         	       ABANOB TAWFIK						   //
-//          		  Z5075490 			                   //
-//				   September 2019						   //
+//                 ABANOB TAWFIK                           //
+//                    Z5075490                             //
+//                 September 2019                          //
 /////////////////////////////////////////////////////////////
 
 // Ex1.dfy 1 mark.
@@ -12,5 +12,5 @@
 // where p, q, r and s are Booleans, and the tilde is the negation operator.
 
 method main(p:bool, q:bool, r:bool, s:bool){
-	assert (((p || q) ==> r) && (r ==> s)) ==> (!s ==> !p);
+    assert (((p || q) ==> r) && (r ==> s)) ==> (!s ==> !p);
 }
