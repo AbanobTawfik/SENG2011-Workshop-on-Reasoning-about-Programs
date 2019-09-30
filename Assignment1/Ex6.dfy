@@ -32,10 +32,7 @@
 
 method IsClean(a: array<int>, key: int) returns (clean: bool)
 requires a != null
-ensures VerifyCleanArray(a, key) ==> clean
-ensures !VerifyCleanArray(a, key) ==> !clean
-ensures clean ==> VerifyCleanArray(a, key)
-ensures !clean ==> !VerifyCleanArray(a, key)
+ensures clean == VerifyCleanArray(a, key)
 ensures forall i :: 0 <= i < a.Length ==> a[i] == old(a[i])
 {
     clean := true;
@@ -43,7 +40,6 @@ ensures forall i :: 0 <= i < a.Length ==> a[i] == old(a[i])
     while i < a.Length
     invariant 0 <= i <= a.Length
     invariant clean == forall j :: 0 <= j < i ==> a[j] != key
-    invariant clean == !exists j :: 0 <= j < i && a[j] == key
     {
         if(a[i] == key){
             clean := false;
@@ -56,8 +52,7 @@ predicate VerifyCleanArray(a: array<int>, key: int)
 requires a != null;
 reads a;
 {
-    forall i :: 0 <= i < a.Length ==> (a[i] != key) && 
-                (!exists i :: 0 <= i < a.Length && a[i] == key)
+    forall i :: 0 <= i < a.Length ==> (a[i] != key)
 }
 
 method Main()

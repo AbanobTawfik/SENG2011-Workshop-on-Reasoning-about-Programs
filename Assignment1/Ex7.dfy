@@ -32,27 +32,50 @@
 
 method Just1(a: array<int>, key: int) returns (b: bool)
 requires a != null
-ensures (a.Length > 0 && (CountOccurencesFromZeroToIndex(a, key, a.Length - 1) == 1)) ==> b
-ensures !(a.Length > 0 && (CountOccurencesFromZeroToIndex(a, key, a.Length - 1) == 1)) ==> !b
-ensures b ==>  a.Length > 0 &&(CountOccurencesFromZeroToIndex(a, key, a.Length - 1) == 1)
-ensures !b ==>  !(a.Length > 0 &&(CountOccurencesFromZeroToIndex(a, key, a.Length - 1) == 1))
+ensures b ==> !VerifyCleanArray(a, key)
+ensures b ==> !VerifyArrayMoreThanOne(a, key)
 ensures forall i :: 0 <= i < a.Length ==> a[i] == old(a[i])
 {
-
+    b := false;
     var i := 0;
-    var count := 0;
     while i < a.Length
     invariant 0 <= i <= a.Length
-    invariant i > 0 ==> count == CountOccurencesFromZeroToIndex(a, key, i-1)
-    invariant i == 0 ==> count == 0
+    invariant b ==> !forall j :: 0 <= j < i ==> (a[j] != key)
+    invariant b ==> forall j, k :: 0 <= j <= k < i && (a[j] == a[k]) && (a[j] == key) ==> (j == k)               
     {
         if(a[i] == key)
         {
-            count := count + 1;
+            b := true;
+            var x := 0;
+            while x < a.Length
+            invariant 0 <= x <= a.Length
+            invariant b ==> forall j :: 0 <= j < x && (a[j] == key) ==> (j == i)
+            {
+                if(a[x] == key && x != i)
+                {
+                    b := false;
+                }
+
+                x := x + 1;
+            }
+            return;
         }
         i := i + 1;
     }
-    b := (count == 1);
+}
+
+predicate VerifyArrayMoreThanOne(a: array<int>, key: int)
+requires a != null;
+reads a;
+{
+    !(forall i, j :: 0 <= i <= j < a.Length && (a[i] == a[j]) && (a[i] == key) ==> (i == j))
+}
+
+predicate VerifyCleanArray(a: array<int>, key: int)
+requires a != null;
+reads a;
+{
+    forall i :: 0 <= i < a.Length ==> (a[i] != key)
 }
 
 predicate VerifyJustOne(a: array<int>, key: int)
@@ -61,29 +84,6 @@ reads a;
 {
     (exists i :: 0 <= i < a.Length && a[i] == key) &&
     (forall i,j :: 0 <= i <= j < a.Length && (a[i] == a[j]) && (a[i] == key) ==> i == j)
-}
-
-function CountOccurencesFromZeroToIndex(a: array<int>, key: int, maxIndex: int): int
-requires a != null
-requires maxIndex >= 0
-requires maxIndex < a.Length
-reads a
-// here i supply my variant that maxIndex is decreasing
-decreases maxIndex
-{
-    if maxIndex == 0 
-    then
-        if(a[maxIndex] == key) 
-        then 
-            1
-        else
-            0
-    else
-        if a[maxIndex] == key 
-        then
-            CountOccurencesFromZeroToIndex(a, key, maxIndex - 1) + 1
-        else
-            CountOccurencesFromZeroToIndex(a, key, maxIndex - 1) 
 }
 
 method Main()
@@ -100,8 +100,10 @@ method Main()
     assert testArray1[2] == 2;
     assert testArray1[3] == 1;
     var test1 := Just1(testArray1, 1);
+    assert !VerifyCleanArray(testArray1, 1);
+    assert VerifyArrayMoreThanOne(testArray1, 1);
     assert !VerifyJustOne(testArray1, 1);
-    assert test1 <==> (CountOccurencesFromZeroToIndex(testArray1, 1, testArray1.Length - 1) == 1);
+    assert !test1;
 
     assert testArray1.Length == 4;
     assert testArray1[0] == 1;
@@ -109,8 +111,10 @@ method Main()
     assert testArray1[2] == 2;
     assert testArray1[3] == 1;
     var test2 := Just1(testArray1, 2);
+    assert !VerifyCleanArray(testArray1, 2);
+    assert !VerifyArrayMoreThanOne(testArray1, 2);
     assert VerifyJustOne(testArray1, 2);
-    assert test2 <==> (CountOccurencesFromZeroToIndex(testArray1, 2, testArray1.Length - 1) == 1);
+    assert test2 ==> !VerifyArrayMoreThanOne(testArray1, 2) && !VerifyCleanArray(testArray1, 2);
     
     assert testArray1.Length == 4;
     assert testArray1[0] == 1;
@@ -118,24 +122,24 @@ method Main()
     assert testArray1[2] == 2;
     assert testArray1[3] == 1;
     var test3 := Just1(testArray1, 3);
-    assert !VerifyJustOne(testArray1, 3);
-    assert test3 <==> (CountOccurencesFromZeroToIndex(testArray1, 3, testArray1.Length - 1) == 1);
+    // // assert !VerifyJustOne(testArray1, 3);
+    // // assert test3 <==> (CountOccurencesFromZeroToIndex(testArray1, 3, testArray1.Length - 1) == 1);
 
     assert testArray2.Length == 1;
     assert testArray2[0] == 1;
     var test4 := Just1(testArray2, 1);
-    assert VerifyJustOne(testArray2, 1);
-    assert test4 <==> (CountOccurencesFromZeroToIndex(testArray2, 1, testArray2.Length - 1) == 1);
+    // // assert VerifyJustOne(testArray2, 1);
+    // // assert test4 <==> (CountOccurencesFromZeroToIndex(testArray2, 1, testArray2.Length - 1) == 1);
 
     assert testArray2.Length == 1;
     assert testArray2[0] == 1;
     var test5 := Just1(testArray2, 2);
-    assert !VerifyJustOne(testArray2, 2);
-    assert test5 <==> (CountOccurencesFromZeroToIndex(testArray2, 2, testArray2.Length - 1) == 1);
+    // // assert !VerifyJustOne(testArray2, 2);
+    // // assert test5 <==> (CountOccurencesFromZeroToIndex(testArray2, 2, testArray2.Length - 1) == 1);
 
     assert testArray3.Length == 0;
     var test6 := Just1(testArray3, 1);
-    assert !VerifyJustOne(testArray3, 1);
+    // // assert !VerifyJustOne(testArray3, 1);
 
     print test1, "\n", test2, "\n", test3, "\n", test4, "\n", test5, "\n", test6, "\n";
 }
