@@ -51,6 +51,8 @@ ensures forall i :: 0 <= i < a.Length ==> (a[i] == old(a[i]))
     b := (count == 1);
 }
 
+// this function will be used to count the number of occurences of the key
+// in the array a, up until the index provided
 function CountOccurences(a: array<int>, key: int, index: int): int
 requires a != null
 requires index < a.Length
