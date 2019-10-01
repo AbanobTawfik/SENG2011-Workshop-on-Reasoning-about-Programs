@@ -58,6 +58,7 @@ requires a != null
 requires index < a.Length
 // short circuit checking first :), this is only really here just so 
 // i can perform my assertions on occurences in array, no functional reason
+ensures (index < 0) ==> (CountOccurences(a, key, index) == 0)
 ensures (index >= 0 && a[index] == key) ==> (CountOccurences(a, key, index) == 1 + CountOccurences(a, key, index - 1))
 ensures (index >= 0 && a[index] != key) ==> (CountOccurences(a, key, index) ==  CountOccurences(a, key, index - 1))
 reads a
