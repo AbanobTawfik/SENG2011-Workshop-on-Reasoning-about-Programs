@@ -57,12 +57,6 @@ ensures sum == x + y
         sum := sum + increments;
         counter := counter + 1;
     }
-
-    assert counter == numberOfLoops;
-    assert y == counter * increments;
-    assert y == numberOfLoops * increments;
-    assert sum == x + (numberOfLoops * increments);
-    assert sum == x + y;
 }
 
 method Test()
