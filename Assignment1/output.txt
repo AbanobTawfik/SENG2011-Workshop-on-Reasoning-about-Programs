@@ -1,18 +1,51 @@
+---------------------------------------------------------
+running Ex1.dfy
+ 
 Dafny program verifier version 1.9.7.30401, Copyright (c) 2003-2016, Microsoft.
 
 Dafny program verifier finished with 2 verified, 0 errors
+---------------------------------------------------------
+ 
+ 
+---------------------------------------------------------
+running Ex2.dfy
+ 
 Dafny program verifier version 1.9.7.30401, Copyright (c) 2003-2016, Microsoft.
 
 Dafny program verifier finished with 2 verified, 0 errors
+---------------------------------------------------------
+ 
+ 
+---------------------------------------------------------
+running Ex3.dfy
+ 
 Dafny program verifier version 1.9.7.30401, Copyright (c) 2003-2016, Microsoft.
 
 Dafny program verifier finished with 2 verified, 0 errors
+---------------------------------------------------------
+ 
+ 
+---------------------------------------------------------
+running Ex4.dfy
+ 
 Dafny program verifier version 1.9.7.30401, Copyright (c) 2003-2016, Microsoft.
 
 Dafny program verifier finished with 4 verified, 0 errors
+---------------------------------------------------------
+ 
+ 
+---------------------------------------------------------
+running Ex5.dfy
+ 
 Dafny program verifier version 1.9.7.30401, Copyright (c) 2003-2016, Microsoft.
 
 Dafny program verifier finished with 3 verified, 0 errors
+---------------------------------------------------------
+ 
+ 
+---------------------------------------------------------
+running Ex6.dfy
+ 
 Dafny program verifier version 1.9.7.30401, Copyright (c) 2003-2016, Microsoft.
 
 Dafny program verifier finished with 5 verified, 0 errors
@@ -26,12 +59,24 @@ True
 False
 True
 True
+---------------------------------------------------------
+ 
+ 
+---------------------------------------------------------
+running Ex7.dfy
+ 
 Dafny program verifier version 1.9.7.30401, Copyright (c) 2003-2016, Microsoft.
-Ex7.dfy(88,64): Error: assertion violation
-Execution trace:
-    (0,0): anon0
-Ex7.dfy(93,64): Error: assertion violation
-Execution trace:
-    (0,0): anon0
 
-Dafny program verifier finished with 4 verified, 2 errors
+Dafny program verifier finished with 5 verified, 0 errors
+Program compiled successfully
+Running...
+
+False
+True
+False
+True
+False
+False
+---------------------------------------------------------
+ 
+ 
