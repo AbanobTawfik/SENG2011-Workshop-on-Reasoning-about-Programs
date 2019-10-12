@@ -24,13 +24,15 @@
 // by writing a method Test that calls the predicate
 // for all the testcases mentioned above.
 
+// in english the predicate says
+// for all elements in the array, the second neighbour to the right will always be bigger
+// and there does not exist indices in which, the second index is 2 more than the first, and is smaller
 predicate EOSorted(a: array<int>)
 requires a !=  null
 reads a
 {
     (forall i,j :: 0 <= i < a.Length - 2 && j == i+2 ==> a[i] < a[j]) &&
-            (!exists i,j :: 0 <= i < a.Length - 2 && j == i+2 && (a[i] > a[j]))
-    
+            (!exists i,j :: 0 <= i < a.Length - 2 && j == i+2 && (a[i] > a[j]))    
 }
 
 method Test()

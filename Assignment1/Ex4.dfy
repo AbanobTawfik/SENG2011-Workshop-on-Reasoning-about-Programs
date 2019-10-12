@@ -8,7 +8,7 @@
 // Ex4.dfy 8 marks. 
 
 // Write a Dafny method, called IncDec, that computes the sum of two integers
-//  x and y by using increments (+1) and decrements (-1) only. 
+//  x and y by using increment (+1) and decrements (-1) only. 
 
 // Verify the method is correct.
 // So, for example:
@@ -37,24 +37,33 @@ ensures sum == x + y
     var counter := 0;
     // variable either +1 or -1 based on if y >= 0, will increment and decrement
     // with this vairable
-    var increments;
-    // return absolute value of y for loop bound
-    var numberOfLoops;
-    
+    var increment;
+    // we want to do this all in 1 loop, in order to do this we need to first 
+    // check if the value is being incremented on decremented
+    // if y is non-negative, we want to increment, so we just leave the loop
+    // to its natural addition 
+    // if y is negative, we want to flip the increment and the bound
+    // meaning we will be adding -1, which is the same as decrementing 
+    var iterations;    
     if y >= 0
     {
-        numberOfLoops := y;
-        increments := 1;
-    }else{
-        numberOfLoops := -1 * y;
-        increments := -1;
+        iterations := y;
+        increment := 1;
     }
-    
-    while counter < numberOfLoops
-    invariant counter <= numberOfLoops 
-    invariant sum == x + (counter*increments);
+    else
     {
-        sum := sum + increments;
+        iterations := -1 * y;
+        increment := -1;
+    }
+    // our value of increment will hold the sign of y
+    // y > 0 ==> increment = 1
+    // y < 0 ==> increment = -1
+    // so by the end of the loop the value of y should be counter*increment
+    while counter < iterations
+    invariant counter <= iterations 
+    invariant sum == x + (counter*increment);
+    {
+        sum := sum + increment;
         counter := counter + 1;
     }
 }

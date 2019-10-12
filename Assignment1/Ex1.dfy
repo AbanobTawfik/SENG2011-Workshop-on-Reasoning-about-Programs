@@ -12,5 +12,7 @@
 // where p, q, r and s are Booleans, and the tilde is the negation operator.
 
 method main(p:bool, q:bool, r:bool, s:bool){
+    // program verifies with no errors, proving it is a tautology
+    // since Dafny cannot find a counter example
     assert (((p || q) ==> r) && (r ==> s)) ==> (!s ==> !p);
 }

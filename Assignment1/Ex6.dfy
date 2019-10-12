@@ -35,17 +35,26 @@ requires a != null
 ensures clean == VerifyCleanArray(a, key)
 ensures forall i :: 0 <= i < a.Length ==> a[i] == old(a[i])
 {
+    // assume the array is clean initially (invariant will hold)
     clean := true;
     var i := 0;
     while i < a.Length
     invariant 0 <= i <= a.Length
+    // note below is the expanded version of the predicate 
+    // up till the index of our current iteration
     invariant clean == forall j :: 0 <= j < i ==> a[j] != key
     {
-        if(a[i] == key){
+        // if we find a instance of the key, we overwrite clean to be false
+        // maintaining the invariant
+        if(a[i] == key)
+        {
             clean := false;
         }
         i := i + 1;
     }
+    // note now the value of clean will be either our inital assumption of true
+    // or it will be false if we encountered a counter example
+    // return the value of clean
 }
 
 predicate VerifyCleanArray(a: array<int>, key: int)
