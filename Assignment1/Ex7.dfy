@@ -84,6 +84,7 @@ method Main()
 
     assert testArray3.Length == 0;
 
+    assert testArray1[0..testArray1.Length] == [1, 1, 2, 1];
     var test1 := Just1(testArray1, 1);
     assert CountOccurences(testArray1[0..testArray1.Length], 1) == 3;
     assert !test1;
@@ -97,6 +98,7 @@ method Main()
     assert CountOccurences(testArray1[0..testArray1.Length], 3) == 0;
     assert !test3;
 
+    assert testArray2[0..testArray2.Length] == [1];
     var test4 := Just1(testArray2, 1);
     assert CountOccurences(testArray2[0..testArray2.Length], 1) == 1;
     assert test4;
@@ -105,10 +107,10 @@ method Main()
     assert CountOccurences(testArray2[0..testArray2.Length], 2) == 0;
     assert !test5;
 
+    assert testArray3[0..testArray3.Length] == []; 
     var test6 := Just1(testArray3, 1);
     assert CountOccurences(testArray3[0..testArray3.Length], 1) == 0;
     assert !test6;
 
     print test1, "\n", test2, "\n", test3, "\n", test4, "\n", test5, "\n", test6, "\n";
-
 }

@@ -1,0 +1,37 @@
+Dafny program verifier version 1.9.7.30401, Copyright (c) 2003-2016, Microsoft.
+
+Dafny program verifier finished with 2 verified, 0 errors
+Dafny program verifier version 1.9.7.30401, Copyright (c) 2003-2016, Microsoft.
+
+Dafny program verifier finished with 2 verified, 0 errors
+Dafny program verifier version 1.9.7.30401, Copyright (c) 2003-2016, Microsoft.
+
+Dafny program verifier finished with 2 verified, 0 errors
+Dafny program verifier version 1.9.7.30401, Copyright (c) 2003-2016, Microsoft.
+
+Dafny program verifier finished with 4 verified, 0 errors
+Dafny program verifier version 1.9.7.30401, Copyright (c) 2003-2016, Microsoft.
+
+Dafny program verifier finished with 3 verified, 0 errors
+Dafny program verifier version 1.9.7.30401, Copyright (c) 2003-2016, Microsoft.
+
+Dafny program verifier finished with 5 verified, 0 errors
+Program compiled successfully
+Running...
+
+False
+False
+False
+True
+False
+True
+True
+Dafny program verifier version 1.9.7.30401, Copyright (c) 2003-2016, Microsoft.
+Ex7.dfy(88,64): Error: assertion violation
+Execution trace:
+    (0,0): anon0
+Ex7.dfy(93,64): Error: assertion violation
+Execution trace:
+    (0,0): anon0
+
+Dafny program verifier finished with 4 verified, 2 errors
