@@ -38,7 +38,6 @@ class Score
 
 method TestScore()
 {
-    // 0 2 0 4 4 6
     var modified, HighScore;
     var HighScoreKeeper := new Score();
     
