@@ -1,32 +1,61 @@
-class Actuator
+class DishWasher
 {
-    var SwitchOn: bool;
-    var SwitchOff: bool;
+    var HasLoad: bool;
+    var HasDetergent: bool;
+    var ISClean: bool;
 
     predicate Valid()
-    reads this`SwitchOn
-    reads this`SwitchOff
+    reads this`HasLoad
+    reads this`HasDetergent
+    reads this`ISClean
     {
-        SwitchOn == !SwitchOff
+        !(HasLoad && HasDetergent && ISClean) &&
+        !(!HasLoad && ISClean) &&
+        !(HasDetergent && ISClean)
     }
 
     constructor()
-    modifies this`SwitchOn
-    modifies this`SwitchOff
+    modifies this`HasLoad
+    modifies this`HasDetergent
+    modifies this`ISClean
     ensures Valid()
-    ensures !SwitchOn && SwitchOff
+    ensures (!HasLoad && !HasDetergent && ISClean)
     {
-        SwitchOn := false;
-        SwitchOff := true;
+        HasLoad := false;
+        HasDetergent := false;
+        ISClean := true;
     }
 
-    method ToggleSwitch()
-    modifies this`SwitchOn
-    modifies this`SwitchOff
+    method Load()
+    modifies this
     requires Valid() ensures Valid()
-    ensures (SwitchOn == !old(SwitchOn)) && (SwitchOff == !old(SwitchOff))
     {
-        SwitchOn := !SwitchOn;
-        SwitchOff := !SwitchOff;
+        HasLoad := true;
+        ISClean := false;
     }
-} // end of Actuator class
+
+    method AddDtgt()
+    modifies this
+    requires Valid() ensures Valid()
+    {
+        HasDetergent := true;
+    }
+
+    method Wash()
+    modifies this
+    requires HasDetergent
+    requires HasLoad
+    requires Valid() ensures Valid()
+    {
+        ISClean := true;
+        HasDetergent := false;
+    }
+
+    method Unload()
+    requires HasLoad
+    modifies this
+    requires Valid() ensures Valid()
+    {
+        HasLoad := false;
+    }
+} // end of DishWasher class
