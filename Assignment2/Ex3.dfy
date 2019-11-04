@@ -60,9 +60,7 @@ class {:autocontracts} Quack<Data>
     {
         if n - m >= 2 
         {
-            var temp := buf[n - 1];
-            buf[n - 1] := buf[m];
-            buf[m] := temp;
+            buf[n - 1], buf[m] := buf[m], buf[n-1];
             shadow := shadow[|shadow| - 1..] + shadow[1..|shadow| - 1] + shadow[0..1];
         }
     }

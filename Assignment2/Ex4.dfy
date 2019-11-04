@@ -7,41 +7,77 @@ ensures multiset(flag[..]) == multiset(old(flag[..]))
 ensures ColourSorted(flag)
 requires flag != null
 {
-    var red := 0;
     var white := 0;
-    var blue := flag.Length - 1;
-    var orange := flag.Length - 1;
-    
-    while red <= orange
-    decreases (orange + blue) - (red + white)
-    invariant 0 <= red <= white <= blue <= orange < flag.Length
-    invariant forall i :: 0 <= i <= red ==> flag[i] == RED
-    invariant forall i :: red < i <= white ==> flag[i] == WHITE
-    invariant forall i :: white < i <= blue ==> flag[i] == BLUE
-    invariant forall i :: blue < i <= orange ==> flag[i] == ORANGE
+    var next := 0;
+    var blue := flag.Length;
+    var orange := flag.Length;
+    while next < blue
+    decreases (orange + blue) - (next + white)
+    invariant 0 <= white <= next <= blue <= orange <= flag.Length
+    invariant forall i :: 0 <= i < white ==> flag[i] == RED
+    invariant forall i :: white <= i < next ==> flag[i] == WHITE
+    invariant forall i :: blue <= i < orange ==> flag[i] == BLUE
+    invariant forall i :: orange <= i < flag.Length ==> flag[i] == ORANGE
+    invariant multiset(flag[..]) == multiset(old(flag[..]))
     {
-        match(flag[red])
+        match(flag[next])
         {
+            // same case of dutch flag with 3 colours, swap the white to the beginning and move the white accross
             case RED     => 
-                red := red + 1;
-            case WHITE   => 
-                flag[red], flag[white] := flag[white], flag[red];
-                red := red + 1;
+                flag[next], flag[white] := flag[white], flag[next];
                 white := white + 1;
+                next := next + 1;
+            // same case of dutch flag with 3 colours, move along incrementing next
+            case WHITE   => 
+                next := next + 1;
+            // same case of dutch flag with 3 colours, move it to the blue section, and decrement the blue  
             case BLUE    =>
-                flag[red], flag[blue] := flag[blue], flag[red];
                 blue := blue - 1;
-            case ORANGE  => 
-                flag[red], flag[orange] := flag[orange], flag[red];
+                flag[next], flag[blue] := flag[blue], flag[next];
+            // new trickier case
+            // if we come accross orange, the first thing we want to do, is move it to the orange pointer
+            // then we want to check 
+            case ORANGE  =>
+                blue := blue - 1;
                 orange := orange - 1;
-                blue := blue - 1;
+                flag[next], flag[orange] := flag[orange], flag[next]; 
+                // THIS IS THE KEY TO EVERYTHING TO PARTITION INTO 4 SECTIONS
+                // we say the sort is finished when our next is pointing at blue
+                // this will account for the pointer change in blue, we change the pointer 
+                // to blue to maintain the invariant that the blue section comes before the orange section
+                // since this doesn't change the actual value of next, on the next iteration, the item we just swapped with the blue
+                // will be sorted with the cases above, this is just to maintain the invariant that blue < orange
+                // this is important since it will maintain the partioning that orange goes infront of blue
+                // if we do not correct blue, and just fix orange the sort would not be doing what it's suppose to be doing
+                if(blue < orange)
+                {
+                    flag[next], flag[blue] := flag[blue], flag[next];
+                }
         }
     }
 }
 predicate ColourSorted(flag:array<Colour>)
+requires flag != null
+reads flag
 {
-    true
-    //forall i :: 0 <= i < flag.Length ==> (flag[i] == RED )
+    forall i :: 0 <= i < flag.Length && (flag[i] == RED) ==> !(exists j :: 0 <= j < i && RedRegion(flag[j])) &&
+    forall i :: 0 <= i < flag.Length && (flag[i] == WHITE) ==> !(exists j :: 0 <= j < i && RedWhiteRegion(flag[j])) &&
+    forall i :: 0 <= i < flag.Length && (flag[i] == BLUE) ==> !(exists j :: 0 <= j < i && RedWhiteBlueRegion(flag[j]))
+}
+
+predicate RedRegion(color: Colour)
+{
+    ((color == WHITE) || (color == BLUE) || (color == ORANGE))
+}
+
+predicate RedWhiteRegion(color: Colour)
+{
+    ((color == BLUE) || (color == ORANGE))
+}
+
+predicate RedWhiteBlueRegion(color: Colour)
+{
+    color == ORANGE
 }
 
 method Main()
