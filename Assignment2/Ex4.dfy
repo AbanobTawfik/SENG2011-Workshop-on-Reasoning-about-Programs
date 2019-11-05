@@ -45,10 +45,12 @@ requires flag != null
                 // we say the sort is finished when our next is pointing at blue
                 // this will account for the pointer change in blue, we change the pointer 
                 // to blue to maintain the invariant that the blue section comes before the orange section
-                // since this doesn't change the actual value of next, on the next iteration, the item we just swapped with the blue
+                // since this doesn't change the actual value of next, on the next iteration, 
+                // the item we just swapped with the blue
                 // will be sorted with the cases above, this is just to maintain the invariant that blue < orange
                 // this is important since it will maintain the partioning that orange goes infront of blue
                 // if we do not correct blue, and just fix orange the sort would not be doing what it's suppose to be doing
+                // and we would get the blue elements pointing infront of orange, destroying our ordering
                 if(blue < orange)
                 {
                     flag[next], flag[blue] := flag[blue], flag[next];
