@@ -1,3 +1,52 @@
+/////////////////////////////////////////////////////////////
+//          ALL CODE IN HERE IS WRITTEN BY                 //
+//                 ABANOB TAWFIK                           //
+//                    Z5075490                             //
+//                 November 2019                           //
+/////////////////////////////////////////////////////////////
+
+// Ex2.pdf and Ex2.dfy 15 marks
+// Typically, using a dishwasher involves loading the dishwasher with dirty dishes and then adding the
+// detergent to the dispenser. The dishwasher then washes the dishes clean, using all the detergent in the
+// process. The dishwasher can then be unloaded, ready to take a new load. At the start, the dishwasher
+// is clean: there are no dishes in the dishwasher and there is no detergent in the dispenser. (Note that
+// we are modelling the state of the dishwasher, not the control of the dishwasher by pressing buttons.)
+
+// There are 4 distinct actions above: loading, adding detergent, washing and unloading. There is some
+// flexibility in the ordering of the actions, as shown by the following 5 testcases:
+
+// 1. A typical testcase is:
+// Load, AddDtgt, Wash, Unload
+// where the names correspond to the 4 actions above.
+
+// 2. The detergent could have been added first, so another possible ordering is:
+// AddDtgt, Load, Wash, Unload
+
+// 3. You know that you are going to do another wash, you could add the detergent much earlier:
+// Load, AddDtgt, Wash, AddDtgt, Unload, Load, Wash, Unload
+
+// 4. If the dishes were really dirty, you may also choose to wash the dishes twice before unloading:
+// Load, AddDtgt, Wash, AddDtgt, Wash, Unload
+
+// 5. You may also load the machine a few plates at a time, or add detergent a bit at a time, so these
+// actions may be repeated:
+// Load, Load, Load, AddDtgt, AddDtgt, Wash, Unload
+
+// An example of ’bad’ behaviour that should fail verification is if the user forgets to add detergent to
+// the dispenser (a risk to hygiene). This corresponds to testcase 1 with the action AddDtgt missing.
+// Another example is if the user forgets to even load the machine (a waste of electricity and detergent),
+// which corresponds to testcase 1 with Load missing. These are other examples of behaviour that should
+// be rejected by the Dafny verifier.
+
+// In summary, you are asked to:
+// • draw a state-transition diagram that represents the behaviour of the dishwasher.
+// • write a specification in Dafny that models the behaviour of the dishwasher described above
+// • include a method that tests the 5 testcases above, or as many of these testcases or similar testcases
+// as you can manage.
+// • include testcases that lead to verification errors, but comment these testcases out so your program
+// verifies successfully. Add a comment to each ’bad’ testcase that says why failure is justified.
+// • you are not allowed to use the :autocontract attribute in this exercise
+
 class DishWasher
 {
     var HasLoad: bool;

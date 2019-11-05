@@ -1,3 +1,18 @@
+/////////////////////////////////////////////////////////////
+//          ALL CODE IN HEADTAIL IS WRITTEN BY             //
+//                 ABANOB TAWFIK                           //
+//                    Z5075490                             //
+//                 November 2019                           //
+/////////////////////////////////////////////////////////////
+
+// Ex3.dfy 10 marks
+// In lectures, the verification of a Quack data type was shown (Week 6 lecture, slide 30). You will observe
+// that the test method for the quack calls a method called HeadTail() that is missing from the lecture
+// notes. This method swaps the data items at the two ends of the queue (so the item at the head goes
+// to the tail, and the tail goes to the head). No arguments are returned.
+// Implement this method, verifying its correctness using the ghost sequence shadow. The verified code
+// for the Quack class and its test method Main() can be found on the website.
+
 class {:autocontracts} Quack<Data>
 {
     var buf: array<Data>;
@@ -54,13 +69,23 @@ class {:autocontracts} Quack<Data>
 
     method HeadTail()
     requires buf != null  // version 1.9.7
+    // no change in size
     ensures |shadow| == |old(shadow)|
+    // if the size of our quack is between 0 and 2, then we just leave it alone
+    // headtail for 0 or 1 element should do nothing
     ensures !(n - m >= 2) ==> shadow == old(shadow)
+    // we take the tail and make it the head, append everything else to the array, then we take the head and make it the tail
+    // this also ensures nothing else changes but head/tail
     ensures (n - m >= 2) ==> shadow == old(shadow[|old(shadow)| - 1..]) + old(shadow[1..|old(shadow)| - 1]) + old(shadow[0..1])
     {
+        // only do anything if our quack is of size bigger than 2, (n - m) is size of the array
         if n - m >= 2 
         {
+            // swap the head and tail
             buf[n - 1], buf[m] := buf[m], buf[n-1];
+            // reconstruct the ghost taking the old tail and making it the new head
+            // we then add everything else inbetween except the tail
+            // we then take the old head and make it the new tail
             shadow := shadow[|shadow| - 1..] + shadow[1..|shadow| - 1] + shadow[0..1];
         }
     }
