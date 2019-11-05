@@ -56,6 +56,7 @@ requires flag != null
         }
     }
 }
+// naturally implies that no orange in any of the red/white/white regions since all say not exists orange
 predicate ColourSorted(flag:array<Colour>)
 requires flag != null
 reads flag
