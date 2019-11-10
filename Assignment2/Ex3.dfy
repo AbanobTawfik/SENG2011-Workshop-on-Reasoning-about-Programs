@@ -62,25 +62,15 @@ class Quack<Data>
         shadow:= shadow + [x];      // same as previous slide: concat 'x'
     }   
 
-    method HeadTail()  modifies this.buf,  this`shadow
-    requires buf != null  // version 1.9.7
-    requires Valid() 
-    // no change in size
-    ensures n == old(n)
-    ensures m == old(m)
-    ensures |shadow| == |old(shadow)|
-    ensures buf.Length == old(buf).Length
-    // if the size of our quack is between 0 and 2, then we just leave it alone
-    // headtail for 0 or 1 element should do nothing
-    // we take the tail and make it the head, append everything else to the array, then we take the head and make it the tail
-    ensures (|shadow| >= 2) ==> shadow == old(shadow[|old(shadow)| - 1..]) + old(shadow[1..|old(shadow)| - 1]) + old(shadow[0..1])
-    // everything between head and tails stay same, hence the < instead of <= 
-    ensures (|shadow| >= 2) ==> (forall i :: m < i < n - 1 ==> (buf[i] == old(buf[i]))) && (buf[m] == old(buf[n - 1]) && buf[n - 1] == old(buf[m]))
-    ensures (|shadow| < 2) ==> buf == old(buf)
-    ensures (|shadow| < 2) ==> shadow == old(shadow)
-    // ensures multiset(shadow) == multiset(old(shadow)) && multiset(buf[..]) == multiset(old(buf[..]))
+    method HeadTail()  modifies this.buf, this`shadow
+    requires buf != null && Valid()  // version 1.9.7
     ensures Valid()
-    // ensures (n - m >= 2) ==> shadow == old(shadow[|old(shadow)| - 1..]) + old(shadow[1..|old(shadow)| - 1]) + old(shadow[0..1])
+    // no change in size
+    ensures m == old(m) && n == old(n) && |shadow| == |old(shadow)| && buf.Length == old(buf).Length
+    ensures if n - m >= 2 then (shadow == (old(shadow[|old(shadow)| - 1..]) + old(shadow[1..|old(shadow)| - 1]) + old(shadow[0..1]))) &&
+                               (forall i :: m < i < n - 1 ==> (buf[i] == old(buf[i]))) && (buf[m] == old(buf[n - 1]) && buf[n - 1] == old(buf[m]))
+                          else buf == old(buf) && shadow == old(shadow)
+    ensures multiset(buf[..]) == multiset(old(buf[..])) && multiset(shadow) == multiset(old(shadow))
     {
         // only do anything if our quack is of size bigger than 2, (n - m) is size of the array
         if n - m >= 2 
