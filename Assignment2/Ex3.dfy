@@ -66,10 +66,12 @@ class Quack<Data>
     requires buf != null && Valid()  // version 1.9.7
     ensures Valid()
     // no change in size
-    ensures m == old(m) && n == old(n) && |shadow| == |old(shadow)| && buf.Length == old(buf).Length
-    ensures if n - m >= 2 then (shadow == (old(shadow[|old(shadow)| - 1..]) + old(shadow[1..|old(shadow)| - 1]) + old(shadow[0..1]))) &&
-                               (forall i :: m < i < n - 1 ==> (buf[i] == old(buf[i]))) && (buf[m] == old(buf[n - 1]) && buf[n - 1] == old(buf[m]))
-                          else buf == old(buf) && shadow == old(shadow)
+    ensures m == old(m) && n == old(n)
+    // note i could also include in here that buf[n - 1] == old(buf[m]) && buf[m] == old(buf[n - 1])
+    // but this slows down verification to a minute, and it is also implied since shadow REFLECT the buf
+    // in the invariant
+    ensures if n - m >= 2 then (shadow == (old(shadow[|old(shadow)| - 1..]) + old(shadow[1..|old(shadow)| - 1]) + old(shadow[0..1])))
+                          else shadow == old(shadow)
     ensures multiset(buf[..]) == multiset(old(buf[..])) && multiset(shadow) == multiset(old(shadow))
     {
         // only do anything if our quack is of size bigger than 2, (n - m) is size of the array
