@@ -67,13 +67,13 @@ class Quack<Data>
     ensures Valid()
     // no change in size
     ensures m == old(m) && n == old(n)
+    ensures multiset(buf[..]) == multiset(old(buf[..])) && multiset(shadow) == multiset(old(shadow))
     // note i could also include in here that buf[n - 1] == old(buf[m]) && buf[m] == old(buf[n - 1])
     // and in the else, buf == old(buf), having post conditions on the buf
     // but this slows down verification to over a minute, and it is also implied since shadow REFLECT the buf
     // in the invariant, so we can imply the changes to buf are SHOWN also in the shadow
     ensures if n - m >= 2 then (shadow == (old(shadow[|old(shadow)| - 1..]) + old(shadow[1..|old(shadow)| - 1]) + old(shadow[0..1])))
                           else shadow == old(shadow)
-    ensures multiset(buf[..]) == multiset(old(buf[..])) && multiset(shadow) == multiset(old(shadow))
     {
         // only do anything if our quack is of size bigger than 2, (n - m) is size of the array
         if n - m >= 2 
