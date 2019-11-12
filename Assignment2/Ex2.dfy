@@ -71,6 +71,7 @@ class DishWasher
 
     method Load()
     modifies this`HasLoad, this`IsClean
+    requires !(IsClean && HasLoad)
     ensures HasLoad && !IsClean
     requires Valid() ensures Valid()
     {
@@ -193,4 +194,18 @@ method Test()
     // failureTestCase3.Load();                                                                   // HasLoad, !HasDetergent, !IsClean --> Loaded dirty with no detergent
     // failureTestCase3.AddDtgt();                                                                // HasLoad, HasDetergent, !IsClean --> Loaded dirty with no detergent  
     // failureTestCase3.Unload();                                                                 // dont unload dirty dishes that is disgusting, unload when clean
+
+    // my own failure case 4, mixing clean and dirty dishes
+    // Ex2.dfy(210,25): Error BP5002: A precondition for this call might not hold.
+    // Ex2.dfy(74,13): Related location: This is the precondition that might not hold.
+    // Execution trace:
+    //     (0,0): anon0
+
+    // Dafny program verifier finished with 12 verified, 1 error
+
+    // var failureTestCase3: DishWasher := new DishWasher();                                      // !HasLoad, !HasDetergent, IsClean --> empty
+    // failureTestCase3.Load();                                                                   // HasLoad, !HasDetergent, !IsClean --> Loaded dirty with no detergent
+    // failureTestCase3.AddDtgt();                                                                // HasLoad, HasDetergent, !IsClean --> Loaded dirty with no detergent  
+    // failureTestCase3.Wash();                                                                   // HasLoad, !HasDetergent, IsClean --> Loaded clean with no detergent
+    // failureTestCase3.Load();                                                                   // dont mix in dirty dishes with clean dishes
 }

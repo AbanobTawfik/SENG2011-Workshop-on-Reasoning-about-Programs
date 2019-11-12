@@ -129,7 +129,7 @@ method Main()
    ms := multiset(b[..]);
    Shuffle(b);
    assert b[..]==[12,34,56,78];
-   assert Sorted(a, 0, a.Length);
+   assert Sorted(b, 0, b.Length);
    assert ms == multiset(b[..]);
    print b[..], '\n';
 }

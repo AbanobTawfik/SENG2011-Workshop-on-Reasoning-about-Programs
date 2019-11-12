@@ -1,5 +1,6 @@
 #!/bin/sh
 
+rm output.txt
 touch output.txt
 
 for i in 1 2 3 4 5
