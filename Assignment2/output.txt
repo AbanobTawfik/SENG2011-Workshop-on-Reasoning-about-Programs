@@ -17,20 +17,6 @@ Dafny program verifier finished with 13 verified, 0 errors
  
  
 ---------------------------------------------------------
-running Ex3.dfy
- 
-Dafny program verifier version 1.9.7.30401, Copyright (c) 2003-2016, Microsoft.
-
-Dafny program verifier finished with 15 verified, 0 errors
-Program compiled successfully
-Running...
-
-works
-queue empty
----------------------------------------------------------
- 
- 
----------------------------------------------------------
 running Ex4.dfy
  
 Dafny program verifier version 1.9.7.30401, Copyright (c) 2003-2016, Microsoft.
