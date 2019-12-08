@@ -15,8 +15,6 @@ ensures Sorted(arr)
         while (curr >= 1 && arr[curr - 1] > rogue)
         invariant 0 <= count <= arr.Length
         invariant 0 <= curr <= count
-        invariant forall i, j :: 0 <= i < j < curr ==> arr[i] <= arr[j]
-        invariant forall i, j :: 0 <= i < j < count ==> arr[i] <= arr[j]
         invariant forall i, j :: 0 <= i < j <= count && j != curr ==> arr[i] <= arr[j]
         invariant arr[curr] >= rogue
         invariant multiset(arr[..]) == multiset(old(arr[..])) - multiset{rogue} + multiset{arr[curr]}
