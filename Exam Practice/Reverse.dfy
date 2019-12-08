@@ -1,6 +1,7 @@
 method Reverse(arr: array<int>)
 requires arr != null
 modifies arr
+ensures multiset(arr[..]) == multiset(old(arr[..]))
 ensures forall i :: 0 <= i < arr.Length/2 ==> arr[i] == old(arr[arr.Length - 1 - i])
 ensures forall i :: 0 <= i < arr.Length/2 ==> arr[arr.Length - 1 - i] == old(arr[i])
 {
@@ -17,3 +18,15 @@ ensures forall i :: 0 <= i < arr.Length/2 ==> arr[arr.Length - 1 - i] == old(arr
     }
 }
 
+method Reverse2(arr: array<int>)
+requires arr != null
+modifies arr
+// ensures multiset(arr[..]) == multiset(old(arr[..]))
+ensures forall i :: 0 <= i < arr.Length ==> arr[i] == old(arr[arr.Length - 1 - i])
+{
+    forall i | 0 <= i < arr.Length     
+    {
+        arr[i] := arr[arr.Length - 1 - i]; 
+    }
+    // assert multiset(arr[..]) == multiset(old(arr[..]));
+}
