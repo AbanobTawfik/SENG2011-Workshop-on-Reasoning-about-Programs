@@ -18,6 +18,8 @@ function Sum(arr: array<int>, index: int): int
 reads arr
 requires arr != null
 requires 0 <= index <= arr.Length
+ensures if index == 0 then Sum(arr, index) ==  0
+                      else Sum(arr, index) == arr[index - 1] + Sum(arr, index - 1)
 {
     if index == 0
     then   
