@@ -9,7 +9,7 @@ ensures (index >= 0) ==>  index < arr.Length && arr[index] == key && key in arr[
     var high := arr.Length;
     while(low < high)
     invariant 0 <= low <= high <= arr.Length
-    invariant forall i :: 0 <= i < arr.Length && !(low <= i < high) ==> (arr[i] != key)
+    invariant forall i :: 0 <= i < arr.Length && !(low <= i < high) ==> arr[i] != key
     {
         var mid := (high + low)/ 2;
         if(arr[mid]  > key)
