@@ -1,0 +1,358 @@
+problems in software
+1. Complexity
+- software by its nature is not regular, there is an almost infinite state space, and multiple ways a product can be created
+- in its nature its very hard to test and create reliable software
+2. adaptability
+- software is a constantly changing market
+- software conforms to the hardware and must be changed to be compatible with the newest hardware
+- product needs to be able to adapat regularly, good software engineers are almost required to see the future requirements of their consumers
+3. flexibility
+- software is perceived as flexible and easy to change
+- this often leads to constantly changing requirements and requests for changed
+- this can occur in any stage whether its before production or during production
+- software must constantly adapt to the current times
+- these changes must also not cause any security issues
+4. conformity
+- people rely on software for almost everything in current days
+- changes require the pre-existing code to behave in the same way it did before
+	- leads to a problem, do u keep the old code, or re-use it or test it?
+- can lead to security risks in high mission critical cases such as, hopsitals, defense systems, banks
+- software must appear to behave regular to user
+5. reliability
+- there is an infite state space and domain for almost every product
+- there are no real current means to test and make sure your program works, current means are still under development and primitive
+- software by nature is buggy and bugs are not only uncommon but are expected
+- need to develop measures to deal with bugs
+- testing hardbour bridge with 3 buses, u know it works for 0, 1 , 2, 3 buses, but with code it is much more complex, 1 wrong variable can throw unexepected results
+- testing and maintaining code is a complex task
+6. abstraction
+- we can't really see our code, we only observe the effects of our code after its executed
+- difficult to envision and communicate between technical and non-technical people
+- we have flow charts/ER diagrams but even they get out of hand quickly and become messy
+- we want ways to develop models for our code
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+what can we learn from Ariane 5?
+The total failure of the initial Ariane 5 launch was due to main factors
+1. code reuse
+- Ariane 5 engineers had used Ariane 4 code which was assumed to be correct in the Ariane 5
+	- Ariane 4 code operated with 16 bit technology
+	- new Ariane 5 code was operating with 64 bit technology
+	- mixing 16 bit (max of 65535) and 32 bit, max of (2.1billion) caused many issues converting between the two
+		- lead to integer overflow when converting between 32 bit and 16 bit
+		- the engineers just decided to throw an exception and send a message conversion was not possible
+	- this was a disasterous decision since the Ariane 4 operated on much slower speeds in the 16 bit threshold, whereas the new technology (ADAPTABILITY OF SOFTWARE)
+	  allowed for much higher speeds, often times causing overflow when converting
+	- this led to the rocket tilting when reading its direction from conversion errors, and when detecting its offboard tried to correct itself rapidly and manual self destruct was required
+	- the re-used code was not tested within the new system, it was just assumed to work like it did in the Ariane 4
+2. Lack of testing
+- Ariane 4 code was not tested with the new Ariane 5 technology, simple testing could have prevented this disaster
+- Engineers assumed if it worked in this project, it must also work in that project, but its not as simple as that
+3. Design Faults
+- there was no proper design behind the code as the backup system was just the original system, which could not handle the exception
+- the Ariane 4 code read the error as a literal integer since it was not expecting speeds greater than the threshold
+- converting this error into an integer gave garbage data leading to dangerous behaviour  
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+we test to see if code is fit for its purpose, we must make sure the code is behaving to accomplish its requirements, otherwise we haven't really tested anything.
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Dafny is capable of infering types, and working with uninitalised data. Dafny will always initialise to base expected values, bool ==> false, int ==> o, string ==> "" if it is using 
+uninitalised variables. however when it comes to verification Dafny will try to prove the assertions/verification work for the domain of the problem given, example if we prove
+all integers are positive, dafny will look for a counter example in the domain. since the domain is - infinity ==> + infinity, there is atleast 1 example where it is negative
+so it will give an assertion violation. this halts the code from being run since it did not verify. verification (shadow) world is the bridge between specification and execution.
+
+Dafny is also like a watchdog, it will check things such as division by 0, or array bounds before the code is run even without verification to make sure no runtime crashed. any potential
+runtime crash would be caught by dafny before it is run.
+
+REMEMBER verification will work as long as dafny can't find a counter example to prove your specification wrong, 
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+correct code in dafny?
+- no division by 0
+- no array out of bounds
+- termination
+- no post condition/ precondition/ assertion violations
+
+Dafny is just a checker, u do the hard work of proving, verifiying and writing the code and all dafny will say is, yes/no 
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+asserts in C vs asserts in dafny
+
+asserts in C will run the program without any checks, and when it comes to the assert, if it is violated it will signal for kill program. this is absolutely rediculous and dangerous in most cases 
+since it will run incorrect code, and even whilst it is running crashing during runtime is unacceptable
+asserts in dafny are real asserts, they are verification based and will check the predicate it is asserting is true for the entire domain. it is a mathematical proof to see if the assert will hold for
+the domain of the possible values in the predicate. it will not compile or even reach runtime if the assertion is violated
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Conformance and confirmation in dafny
+conformance is where your code conforms to a specification and correctly behaves in occordance to the specification
+confirmation is where users will confirm the behaviour of the code in a black box test
+
+just because your code conforms to specification doesn't mean it is doing what you want! for example
+- verifying a sort, u write an algorithm to sort and all you check is that the array is sorted by the end
+- simply wipe the array and replace all elements with 0, completely destroying any use of the data
+- its considered sorted so it will conform to the specificaiton, no assertion errors code verified conforming to spec
+
+RUBBISH SPEC
+when a user black box tests and confirms the behaviour they will be like, "what the heck all my data is just 0" and 
+will not acquire the right behaviour. Testing the code is important and this can also be done with conformance.
+adding assert tests after can accomplish this
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+spec strength, overloading (adding specification)
+- weakest pre-condition
+	- allow as many values in our domain as possible
+- strongest post condition
+	- try to define EXACTLY the behaviour of the code and what we can expect
+strong pre-conditions just ignores possible values that can be dealt with and weak post conditions are most dangerous of all, and allows programmers to completely destroy
+data in a function and perceive as correct
+- example absolute value function
+	- post condition just saying result >= 0
+		- user can just say result == 42 and call it a day
+		- verifies since 42 >= 0
+		- assert that result >= 0 in testing it seems like it works
+		- it is doing something dangerous
+	- post condition saying result == |value| ==> tells us our exact value
+		- this is what we want so we know EXACTLY what can and cant be put in the method
+if a programmer hates his job and one day ssays ill wipe out the database the next time they ask me to write a sort, given a weak specification, very very easy
+however if we specify EXACTLY that the data is sorted, and the actual values inside the array are the same, then they are stuck, haha they can't do anything but write sort
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Forgiven/forbidden/unforgiven
+there are many ways to handle error handling in dafny
+- 3 different specifications can provide the same behaviour on correct data
+- behave differently on illegal data that is considered (dangerous)
+example - swap first 2 values of array
+array length 1, what do we do?
+well we have the 3 approaches
+- forgiven, just return true, explosion rule
+- forbidden, pre-condition will return an error and not allow anything to return/run
+- unforgiven, return false and handle the error, still runs but return false
+
+all 3 behave same under correct data, only different on illegal data
+- this is part of being a project leader, how do u deal with illegal data
+forbidden is usually preferred since it wont run with rubbish, but maybe in cases we might want to!
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+no other part cripples the result if done wrong, no other part is difficult to fix up later, requirements by brooks 1987
+
+even if you write verified code that is correct, if its not a requirement, you haven't done anything and just realistically wasted time
+alot of devs tend to venture off and doing extra work on unrelated tasks, whilst forgetting the requirements
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+function vs non-functional requirements
+requirements are heirachical and this mostly goes to the functional requirements. top elvel (stakeholder requirements), lower level and leaves are programming tasks
+- functional requirements, what the system does
+	- the bank should allow users to withrdaw money top level (business/stakeholder)
+		- the bank should check the users balance before withdrawal (more programming task still high level)
+			- the bank should perform withdrawal if balance > amount (programming task)
+- non functional requirements, more subjective, how the system should perform
+	- efficient and performant
+	- secure
+	- reliable
+	- maintainable
+these are much more difficult to measure and difficult to put into requirements/use cases, however they are the backbone of a project
+- all projects start, if this were a car, the non function requirements are the exterior, and the functional requirements are the engine
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+WBS
+
+100% rule
+- 100% of scope of parent must be covered by children elements with no overlap
+multiple ways to do a WBS, deliverable oriented, phase WBS, organizational, task based
+this is not a schedule it tells us what we want, we are then required to make a schedule/budget etc. to achieve all the deliverables
+top level of WBS main packages, determine cost and time breakdown
+
+CPM
+- the longest sequence of tasks to meet project deadline
+- delays on path means entire project delay, carries up the tree
+- used to determine what can give us the MVP (minimum viable product)
+
+WBS is simply like giving out a plan of what we want to accomplish, and how much work each step would take, it us up to us to actually schedule
+and create tasks, generally we don't put actions/verbs in WBS since this limits what the outcome is. example instead of saying (we mergesort the data) we say (we want a sorted set of data)
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+assertions
+- post condition is only thing we can assert from the method
+- dafny doesnt remember anything from a method besides its post condition
+so if u assert ur result > 0, but in ur method ur setting the result == 42
+ALL YOU CAN ASSERT IS RESULT > 0
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Dafny witnesses
+dafny won't do logical proofs for you, otherwise we could solve every mathematical problem in the world, its the oppsoite. we prove to dafny anything we want to verify, 
+dafny is our yes man not our prover
+- dafny only knows it rule book, and what you put infront of it, this is the tools it uses to prove your work
+- you must supply a witness to verify things in exists/forall quantifiers
+	-example array [0, 1, 2, 3]
+	- if you just tell dafny that forall values, value == 4
+	- assertion error since dafny doesnt know the values in the array
+	- however once we verify the array is size 4 and all the values, we can say asserts on it
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+dafny is sound
+- spurious, no false negatives, but can have false positives, unfortunate but safe
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+two kinds of verification for data structures
+- program verification
+	- treat the data structure operations as program code
+	- verify using post condition the effect of the operation on the code
+	- valid to maintain
+- ghost verification
+	- we shadow the real data by creating a verification copy that mimics the real data
+	- verify the effects on shadow
+	- invariant valid will link our shadow to our real data
+	- make sure valid maintained
+possible issue with ghost data however, is it cannot prevent bad behaviour, if the real data is bad, so is the ghost data
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+partitioning example (harder)
+[9, 8, 7, 6, 5, 4, 3, 2, -1, 0]
+--> [-1 , 8, 7, 6, 5, 4, 3, 2, 9, 0] occurs at the 8th element
+--> [-1, 0, 7, 6, 5, 4, 3, 2, 9, 8] final swap at end of loop, since we only moved low counter by 1
+final partition (redemption from lecture)
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+testing and wbs STUFF
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+difference between white box vs black box testing
+- black-box testing, tests the output of the code in respect to the requirements, behavioural testing
+  must always be done and must always be correct
+- white box testing is a debugging of the code and makes sure the code is correct. 
+	- creates test cases to check different parts of the code
+	- should be done but not always possible
+ NOTE WHITE BOX TESTING IN REAL WORLD IS DONE WITH UNIT TESTING AND % COVERAGE OF STATEMENTS
+	- one set of inputs for a full execution of the program makes 1 test case
+	- these test cases come from our blackbox tests and also from other branches of the code
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+different types of white box testing
+there are an infinite number of test cases typically to be made, if we want to check each value behaves correctly, we can't just make a test case for EVERY value
+so we need to take approaches
+1. statement coverage
+	- each statement is executed atleast once (100%) aim for 100% (80% realistic)
+2. Branch Coverage <-- used for checking different decisions
+	- test each possible branch of all execution paths, make sure all execution paths have been tested
+3. Predicate Coverage <-- used for condition checks
+	- test every possible truth value of every predicate in the code to make sure they all have been tested
+statement coverage tends to be simpler than branch and predicate coverage
+for example if our program is, if a == b && b == 3 then do x else do Y
+statement coverage will just check the if statement behaves correctly
+branch coverage will check the case where it goes through the if statement and hwen it doesnt go through the if statement (all execution paths)
+predicate coverage is crazy and will check every truth value of a and b and make sure in each case the code works correctly
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+white box testing loops
+each time a loop condition is checked that creates a branching of when the condition is true/false
+- very hard since behaviour of loop is only known at execution
+so stratergy?
+- test for 1 execution
+- test for 0 executions
+- test for 5 executions 
+- test for 10000 executions (maximum possible to you)
+not fully reliable though since we don't know always how many times the loop will iterate so try aim for the best coverage
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+difficulties with white box testing as opposed to black box testing
+- it is very simple to black box test, take a list of your requirements and walkthrough
+- create a code execution plan for each scenario
+- test and check behaviour simple
+finite test cases with black box
+white box testing on the other hand is never complete
+- you will always have cases you haven't yourself checked
+- you hope you find faults through each statement checked 
+- very timely this is why companies often hire testers
+- if you change the code at any time you have to re-run the tests, any change can break a system, and this requires regression testing
+- in real world we use unit tests which are statement coverages since other forms are much more difficult and costly to implement 
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+limitations of whitebox testing
+- we only define correctness in terms of the output of the code not the behaviour
+- we only cover a tiny tiny almost infitely small set of values in the possible domain, realistically it's infinite
+- we don't really check the code itself we just check the output, it is data driven, at best we will check flow of control 
+- very tiring and tedious, people hire testers to usually test their systems
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+validation vs verification
+- validation is the case when the output of the code is behaving correctly in respect to the requirements, it doesn't mean it works perfectly or it has been verified
+- C like tests, make method sorted, check it sorts values, you see values sorted its been validated
+	- execution of the product and making sure it does the right thing for user, more of the prototyping phase
+	- human based tests 
+	- usually done towards the end
+	- involves black and white box testing, prototyping, final acceptance testing where customer tests before launch
+	- usually companies hire testers
+- verification is the case when the code itself is correctly conforming to its specification, it is more of a mathematical proof for the dafny like people and will
+ always know the code is behaving as expected in respect to its specification
+	- verifying documentation/design/code, more objective
+	- no execution needed
+	- very low level done very earily
+	- usually done by QA engineers
+	- involves code inspections, walkthroughs, design documentation, specification analysis, proof of correctness (dafny stuff)
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+validation correctness vs verification correctness
+1. validation correctness
+- customers are dynamic, failable and unreliable
+- behavioural correctness is defined by the requirements, however they are usually unclear, incomplete and or inconsistent, we dont always know
+  if we are doing what the customer imagines, so we make sure we can test as many cases as possible
+  correctness is solely determined by the customer and stakeholders
+2. verification  correctness
+- correct in regards to specification, very objective.
+the specification of the program defines the behaviour of each available method through the use of pre/post conditions and invariants, this is a formal and objective
+way to define behaviour expected. verification is code driven, since we conform to our specification we check the effect and change of state of each line of code. 
+this can lead to issues however when testing as mentioned above with whitebox testing
+- remember the harbour bridge testing example, u test for 3 cars u know that the bridge works for 0 --> 3
+if you were to mimic this in code, 2 cars might cause some kind of array error, it might behave differently, so we try to make as many meaningful test cases as possible 
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+elements of a use case
+- actor (whoever is using the system)
+- stakeholders
+- primary actor (the user to initiate the interaction with system)
+- pre-condition
+- triggers
+- main success scenario
+- alternate paths
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+benefits of use cases
+- they help show scenarios of our system through walkthroughs explaining the user interaction with system along each step of the way. they are usually
+  based off of requirements and hence allow us to model the behaviour of our system before we begin coding. it gives us almost a set of goals to accomplish and allows us
+  to determine complexity and cost of the system. 
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+making a use case
+1. find out who the users in the system are
+2. find out their interactions with the system
+3. for each interaction you want to define the normal course of action and expected behaviour
+4. we can create alternate flows for different branching in the use case
+5. define what happened before and after the use case and the impact on system and user
+6. repeat this for all users
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+what is a WBS?
+- a project management technique
+	- defines and organises the scope of a project
+	- hierachical tree of deliverables
+a wbs is made in order to
+	- identify all the deliverables of a system
+	- track costs/progression and performance of the system components
+	- define responsibilites and identify when co-ordination is needed
+WBS should focus on the planned outcome of each system component, it is not a schedule or your requirements, it just outlines what is required from your system to be built!!
+a WBS is typically used to create a schedule
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+CPM in a WBS
+critical path method is the longest sequence of tasks required to be completed to create a minimal viable product for project release. the CPM will determine the shortest period
+in which the project can be done
+- delays in any node of the CPM will mean project delay
+the CPM is almost considered the schedule required to get a proejct to launch, it will have cost analysis by analysing 
+- there can be more than 1 CPM
+- to create a CPM from a WBS
+1. take all deliverables from the WBS and put them into nodes
+2. allocate time and cost of each node
+3. connect all the nodes into a graph
+4. determine the shortest duration time to complete the project
+5. extra features can be completed after production
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
